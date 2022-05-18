@@ -20,7 +20,7 @@ export class Intro extends Phaser.Scene {
         this.add.image(400, 300, 'capture');
         this.cameras.main.setBackgroundColor("#000000");
         this.music = this.sound.add('crazy_tanks');
-        this.text = this.add.text(400, 200, 'Crazy Tanks');
+        this.text = this.add.text(400, 200, 'Crazy Tanks Alpha');
         this.text.align = 'center';
         this.text.font = 'Arial Black';
         this.text.fontSize = 70;
