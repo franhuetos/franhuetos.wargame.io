@@ -36,7 +36,7 @@ export class Intro extends Phaser.Scene {
         //     this.scene.start('Fase1');
         // });
 
-        this.clickButtonStart = this.add.text(400, 300, 'Start', { fill: '#ffffff' })
+        this.clickButtonStart = this.add.text(400, 300, 'Start2', { fill: '#ffffff' })
             .setInteractive()
             .on('pointerup', () => {
                 document.body.requestFullscreen();
