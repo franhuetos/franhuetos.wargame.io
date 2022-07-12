@@ -26,7 +26,7 @@ export class Fase1 extends SelectionDemoScene {
 
         //fase constants
         this.constants = {
-            scale: 1.5
+            scale: 1
         }
 
         //events
@@ -67,7 +67,6 @@ export class Fase1 extends SelectionDemoScene {
 
     initializeState(){
         this.pointerPosition;
-        // this.score = new Score();
         this.finished = false;        
     }
 
@@ -85,89 +84,21 @@ export class Fase1 extends SelectionDemoScene {
 
         this.explosions = new Explosions(this, 'explosion');
 
-        this.towers = new Towers(this, 'tower');
-        this.towersShotArea =  this.physics.add.group();
-        for (var i = 0; i < 3; i++) {
-            var x = Phaser.Math.RND.between(320, 350);
-            var y = Phaser.Math.RND.between(180, 280);
-            this.towers.create('tower', x, y, 'tower_stop');
-            let shotArea = this.physics.add.image(150, 50);
-            shotArea.body.setBoundsRectangle(x, y, 150, 50);
-            this.towersShotArea.create(x, y, shotArea);
-            this.towersShotArea.children.entries[i].item = this.towers.items.children.entries[i];
-            this.towers.items.children.entries[i].shotArea = this.towersShotArea.children.entries[i];
-            // this.towersShotArea.children.entries[i].body.width = 100;
-            this.towers.items.children.entries[i].shotArea.setDepth(-1);
-            this.towers.items.children.entries[i].shotArea.setSize(150, 50);
-            this.towers.items.children.entries[i].setVelocity(0);
-            this.towers.items.children.entries[i].setImmovable(true);
-            this.towers.items.children.entries[i].setBounce(0);
-        }
-
+        this.towers = new Towers(this, 'tower', 3);
+        this.towersShotArea = this.towers.createGroup(3, {min: 320, max: 350}, {min:180, max: 280});
+       
         this.soldiers = new Soldiers(this, 'soldier');
-        this.soldiersShotArea =  this.physics.add.group();
-        for (var i = 0; i < 20; i++) {
-            var x = Phaser.Math.RND.between(150, 280);
-            var y = Phaser.Math.RND.between(50, 280);
-            this.soldiers.create('soldier', x, y, 'soldier_stop');
-            let shotArea = this.physics.add.image(100, 50);
-            shotArea.body.setBoundsRectangle(x, y, 100, 50);
-            this.soldiersShotArea.create(x, y, shotArea);
-            this.soldiersShotArea.children.entries[i].item = this.soldiers.items.children.entries[i];
-            this.soldiers.items.children.entries[i].shotArea = this.soldiersShotArea.children.entries[i];
-            // this.soldiersShotArea.children.entries[i].body.width = 100;
-            this.soldiers.items.children.entries[i].shotArea.setDepth(-1);
-            this.soldiers.items.children.entries[i].shotArea.setSize(100, 50);            
-        }
-
+        this.soldiersShotArea =  this.soldiers.createGroup(50, {min: 150, max: 280}, {min:50, max: 280});
+ 
         this.tanks = new Tanks(this, 'tank');
-        this.tanksShotArea =  this.physics.add.group();
-        for (var i = 0; i < 3; i++) {
-            var x = Phaser.Math.RND.between(150, 280);
-            var y = Phaser.Math.RND.between(50, 280);
-            this.tanks.create('tank', x, y, 'tank_stop');
-            let shotArea = this.physics.add.image(200, 50);
-            shotArea.body.setBoundsRectangle(x, y, 200, 50);
-            this.tanksShotArea.create(x, y, shotArea);
-            this.tanksShotArea.children.entries[i].item = this.tanks.items.children.entries[i];
-            this.tanks.items.children.entries[i].shotArea = this.tanksShotArea.children.entries[i];
-            // this.tanksShotArea.children.entries[i].body.width = 400;
-            this.tanks.items.children.entries[i].shotArea.setDepth(-1);
-            this.tanks.items.children.entries[i].shotArea.setSize(200, 50);
-        }
-
+        this.tanksShotArea =  this.tanks.createGroup(1, {min: 150, max: 280}, {min:50, max: 280});
+        
         this.enemies = new Soldiers(this, 'enemy');
-        this.enemiesShotArea =  this.physics.add.group();
-        for (var i = 0; i < 20; i++) {
-            var x = Phaser.Math.RND.between(650, 750);
-            var y = Phaser.Math.RND.between(50, 250);
-            this.enemies.create('enemy', x, y, 'enemy_stop');
-            let shotArea = this.physics.add.image(100, 50);
-            shotArea.body.setBoundsRectangle(x, y, 100, 50);
-            this.enemiesShotArea.create(x, y, shotArea);
-            this.enemiesShotArea.children.entries[i].item = this.enemies.items.children.entries[i];
-            this.enemies.items.children.entries[i].shotArea = this.enemiesShotArea.children.entries[i];
-            // this.enemiesShotArea.children.entries[i].body.width = 100;
-            this.enemies.items.children.entries[i].shotArea.setDepth(-1);
-            this.enemies.items.children.entries[i].shotArea.setSize(100, 50);
-        }
-
+        this.enemiesShotArea =  this.enemies.createGroup(50, {min: 650, max: 750}, {min:50, max: 250});
+        
         this.tanksEnemies = new Tanks(this, 'tankenemy');
-        this.tanksEnemiesShotArea =  this.physics.add.group();
-        for (var i = 0; i < 3; i++) {
-            var x = Phaser.Math.RND.between(650, 750);
-            var y = Phaser.Math.RND.between(50, 250);
-            this.tanksEnemies.create('tankenemy', x, y, 'tankenemy_walk');
-            let shotArea = this.physics.add.image(200, 50);
-            shotArea.body.setBoundsRectangle(x, y, 200, 50);
-            this.tanksEnemiesShotArea.create(x, y, shotArea);
-            this.tanksEnemiesShotArea.children.entries[i].item = this.tanksEnemies.items.children.entries[i];
-            this.tanksEnemies.items.children.entries[i].shotArea = this.tanksEnemiesShotArea.children.entries[i];
-            // this.tanksEnemiesShotArea.children.entries[i].body.width = 400;
-            this.tanksEnemies.items.children.entries[i].shotArea.setDepth(-1);
-            this.tanksEnemies.items.children.entries[i].shotArea.setSize(200, 50);
-        }
-        // this.tanksEnemies.create('tankenemy', this.map.widthInPixels - 60, 300, 'tankenemy_walk', 120);
+        this.tanksEnemiesShotArea =  this.tanksEnemies.createGroup(1, {min: 650, max: 750}, {min:50, max: 250});
+
 
         backgroundLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(backgroundLayer, [this.soldiers.items, this.enemies.items, this.tanks.items, this.tanksEnemies.items]);
@@ -329,7 +260,7 @@ export class Fase1 extends SelectionDemoScene {
 
     onSelectedElementPointerUp(element, pointer) {
         let selected = this.selectedItems.find(item => {
-            return ((item.gameObject.name === element.name) && element.isAlive);
+            return (item.gameObject && ((item.gameObject.name === element.name) && element.isAlive));
         });
         if (selected) {
             this.moveSelectedElement(element, pointer);

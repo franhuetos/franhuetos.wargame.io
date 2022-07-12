@@ -2,6 +2,8 @@ import { MovementManager } from "./MovementManager.js";
 
 export class Towers {
   
+  shotArea;
+  
   constructor(scene, spritesheet) {
     this.type = spritesheet || "tower";
     this.relatedScene = scene;
@@ -40,6 +42,38 @@ export class Towers {
     this.relatedScene.anims.create(tower_anims.tower_explode);
     this.relatedScene.anims.create(tower_anims.tower_shot);
     this.relatedScene.anims.create(tower_anims.tower_stop);
+  }
+
+  createGroup(numItems, x, y){
+    numItems = numItems || 23;
+    let coordinates = {
+      x: {
+        min: x && x.min? x.min : 0,
+        max: x && x.max? x.max : 750
+      },
+      y: {
+        min: y && y.min? y.min : 0,
+        max: y && y.max? y.max  : 280
+      }
+    };
+    this.shotArea =  this.relatedScene.physics.add.group();
+    for (let i = 0; i < numItems; i++) {
+        let x = Phaser.Math.RND.between(coordinates.x.min, coordinates.x.max);
+        let y = Phaser.Math.RND.between(coordinates.y.min, coordinates.y.max);
+        this.create('tower', x, y, 'tower_stop');
+        let shotArea = this.relatedScene.physics.add.image(150, 50);
+        shotArea.body.setBoundsRectangle(x, y, 150, 50);
+        this.shotArea.create(x, y, shotArea);
+        this.shotArea.children.entries[i].item = this.items.children.entries[i];
+        this.items.children.entries[i].shotArea = this.shotArea.children.entries[i];
+        // this.shotArea.children.entries[i].body.width = 100;
+        this.items.children.entries[i].shotArea.setDepth(-1);
+        this.items.children.entries[i].shotArea.setSize(150, 50);
+        this.items.children.entries[i].setVelocity(0);
+        this.items.children.entries[i].setImmovable(true);
+        this.items.children.entries[i].setBounce(0);
+    }
+    return this.shotArea;
   }
 
 

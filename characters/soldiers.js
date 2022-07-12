@@ -1,12 +1,14 @@
 import { MovementManager } from "./MovementManager.js";
 
 export class Soldiers {
+
+  shotArea;
   
   constructor(scene, spritesheet) {
     this.type = spritesheet || "soldier";
     this.relatedScene = scene;
     this.VELOCITY = {
-      WALK: 10,
+      WALK: 20,
       STOP: 0
     };
     this.items = this.relatedScene.physics.add.group();
@@ -60,6 +62,34 @@ export class Soldiers {
     this.relatedScene.anims.create(soldier_anims.soldier_shot);
   }
 
+  createGroup(numItems, x, y){
+    numItems = numItems || 23;
+    let coordinates = {
+      x: {
+        min: x && x.min? x.min : 0,
+        max: x && x.max? x.max : 750
+      },
+      y: {
+        min: y && y.min? y.min : 0,
+        max: y && y.max? y.max : 280
+      }
+    };
+    this.shotArea =  this.relatedScene.physics.add.group();
+    for (let i = 0; i < numItems; i++) {
+        let x = Phaser.Math.RND.between(coordinates.x.min, coordinates.x.max);
+        let y = Phaser.Math.RND.between(coordinates.y.min, coordinates.y.max);
+        this.create(this.type, x, y, this.type + '_stop');
+        let shotArea = this.relatedScene.physics.add.image(100, 50);
+        shotArea.body.setBoundsRectangle(x, y, 100, 50);
+        this.shotArea.create(x, y, shotArea);
+        this.shotArea.children.entries[i].item = this.items.children.entries[i];
+        this.items.children.entries[i].shotArea = this.shotArea.children.entries[i];
+        // this.shotArea.children.entries[i].body.width = 100;
+        this.items.children.entries[i].shotArea.setDepth(-1);
+        this.items.children.entries[i].shotArea.setSize(100, 50);            
+    }
+    return this.shotArea;
+  }
 
   create(name, x, y, animation, velocity, relatedPower) {
     let soldier = this.items.create(x, y, this.type);
@@ -115,25 +145,25 @@ export class Soldiers {
     //   soldier.play("soldier_stop");
     //   soldier.body.stop();
 
-    //   // this.physics.world.removeCollider(collider);
+    //   // this.relatedScene.physics.world.removeCollider(collider);
     // }, null, this, true);
   }
 
-  createGroup() {
-    this.items.create(x, y, "soldier_stop")
-    // this.relatedScene.physics.add.staticGroup({
-    //   key: ["soldier_stop", "soldier_stop", "soldier_stop", "soldier_stop"],
-    //   frameQuantity: 10,
-    //   gridAlign: {
-    //     width: 10,
-    //     height: 4,
-    //     cellWidth: 67,
-    //     cellHeight: 34,
-    //     x: 95,
-    //     y: 100
-    //   }
-    // });
-  }
+  // createGroup() {
+  //   this.items.create(x, y, "soldier_stop")
+  //   // this.relatedScene.physics.add.staticGroup({
+  //   //   key: ["soldier_stop", "soldier_stop", "soldier_stop", "soldier_stop"],
+  //   //   frameQuantity: 10,
+  //   //   gridAlign: {
+  //   //     width: 10,
+  //   //     height: 4,
+  //   //     cellWidth: 67,
+  //   //     cellHeight: 34,
+  //   //     x: 95,
+  //   //     y: 100
+  //   //   }
+  //   // });
+  // }
 
   fight(soldier, enemy) {
     soldier.setVelocity(0, 0);
