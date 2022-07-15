@@ -94,7 +94,7 @@ export class Fase1 extends SelectionDemoScene {
         this.tanksShotArea =  this.tanks.createGroup(1, {min: 150, max: 280}, {min:50, max: 280});
         
         this.enemies = new Soldiers(this, 'enemy');
-        this.enemiesShotArea =  this.enemies.createGroup(10, {min: 650, max: 750}, {min:50, max: 250});
+        this.enemiesShotArea =  this.enemies.createGroup(20, {min: 650, max: 750}, {min:50, max: 250});
         
         this.tanksEnemies = new Tanks(this, 'tankenemy');
         this.tanksEnemiesShotArea =  this.tanksEnemies.createGroup(1, {min: 650, max: 750}, {min:50, max: 250});
