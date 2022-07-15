@@ -84,17 +84,17 @@ export class Fase1 extends SelectionDemoScene {
 
         this.explosions = new Explosions(this, 'explosion');
 
-        this.towers = new Towers(this, 'tower', 3);
+        this.towers = new Towers(this, 'tower');
         this.towersShotArea = this.towers.createGroup(3, {min: 320, max: 350}, {min:180, max: 280});
        
         this.soldiers = new Soldiers(this, 'soldier');
-        this.soldiersShotArea =  this.soldiers.createGroup(50, {min: 150, max: 280}, {min:50, max: 280});
+        this.soldiersShotArea =  this.soldiers.createGroup(10, {min: 150, max: 280}, {min:50, max: 280});
  
         this.tanks = new Tanks(this, 'tank');
         this.tanksShotArea =  this.tanks.createGroup(1, {min: 150, max: 280}, {min:50, max: 280});
         
         this.enemies = new Soldiers(this, 'enemy');
-        this.enemiesShotArea =  this.enemies.createGroup(50, {min: 650, max: 750}, {min:50, max: 250});
+        this.enemiesShotArea =  this.enemies.createGroup(10, {min: 650, max: 750}, {min:50, max: 250});
         
         this.tanksEnemies = new Tanks(this, 'tankenemy');
         this.tanksEnemiesShotArea =  this.tanksEnemies.createGroup(1, {min: 650, max: 750}, {min:50, max: 250});
@@ -188,7 +188,7 @@ export class Fase1 extends SelectionDemoScene {
                 let centeredNewRec = Phaser.Geom.Rectangle.CenterOn(new Phaser.Geom.Rectangle(this.selectedArea.x, this.selectedArea.y, this.selectedArea.width, this.selectedArea.height), pointer.x + (this.selectedArea.width / 2), pointer.y + (this.selectedArea.height / 2));
                 this.selection = this.childrenScene.add.rectangle(centeredNewRec.x, centeredNewRec.y, centeredNewRec.width, centeredNewRec.height, yellowColor, 0.5);
             
-                const debugGraphics = this.scene.add.graphics().setAlpha(0.7);
+                const debugGraphics = this.add.graphics().setAlpha(0.7);
                 backgroundLayer.renderDebug(debugGraphics, {
                     tileColor: null,
                     collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
