@@ -20,7 +20,7 @@ export class Intro extends Phaser.Scene {
         this.add.image(400, 300, 'capture');
         this.cameras.main.setBackgroundColor("#000000");
         this.music = this.sound.add('crazy_tanks');
-        this.text = this.add.text(400, 200, 'Crazy Tanks Alpha');
+        this.text = this.add.text(400, 200, 'Crazy Tanks');
         this.text.align = 'center';
         this.text.font = 'Arial Black';
         this.text.fontSize = 70;
@@ -36,7 +36,7 @@ export class Intro extends Phaser.Scene {
         //     this.scene.start('Fase1');
         // });
 
-        this.clickButtonStart = this.add.text(400, 300, 'Start2', { fill: '#ffffff' })
+        this.clickButtonStart = this.add.text(400, 300, 'Start', { fill: '#ffffff' })
             .setInteractive()
             .on('pointerup', () => {
                 document.body.requestFullscreen();
