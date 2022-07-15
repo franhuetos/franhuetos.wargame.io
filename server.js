@@ -132,8 +132,8 @@ function getAllPlayers(){
     return players;
 }
 
-app.listen(8080, () => {
-    console.log('Server listening on http://localhost:8080');
+app.listen(process.env.PORT, () => {
+    console.log('Server listening on http://localhost:' + process.env.PORT);
 });
 
 io.listen(3000);
