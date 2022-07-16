@@ -65,8 +65,7 @@ export class MovementManager {
             this.sprite.body.enable = false;
             this.score.die(this.actionPrefix);
             this.scene.time.delayedCall(1000, ()=> { 
-                this.sprite.body.gameObject.setAlpha(0.2);
-                this.sprite.body.gameObject.clearTint();
+                this.killSprite();
             }, this, null); 
             if(this.sprite.selectable){
                 this.sprite.isSelected = false;
@@ -84,13 +83,20 @@ export class MovementManager {
             this.sprite.body.enable = false;
             this.score.die(this.actionPrefix);
             this.scene.time.delayedCall(1000, ()=> { 
-                this.sprite.body.gameObject.setAlpha(0.2);
-                this.sprite.body.gameObject.clearTint();
+                this.killSprite();
             }, this, null); 
             if(this.sprite.selectable){
                 this.sprite.isSelected = false;
             }
         }
+    }
+
+    killSprite(){
+        this.sprite.active = false; // lo ponemos inactivo en el ciclo de phaser
+        this.sprite.body.gameObject.setAlpha(0.2);
+        this.sprite.body.gameObject.clearTint();
+        this.sprite.shotArea.destroy(); // destruimos el area de disparo
+        // this.sprite.destroy(); // mantenemos vivo el sprite para que se vea en pantalla
     }
 
     jump() {
@@ -168,8 +174,8 @@ export class MovementManager {
                 this.isShoting = true;
                 this.scene.shotAudio.play();
                 this.sprite.play(this.actionPrefix + '_shot', true);
-                var wait = Phaser.Math.Between(0, 300);
-                this.scene.time.delayedCall(3000 + wait, (soldier)=> { this.isShoting = false; }, this, null); 
+                let wait = Phaser.Math.Between(0, 300);
+                this.scene.time.delayedCall(10000 + wait, (soldier)=> { this.isShoting = false; }, this, null); 
                 this.score.shot(this.actionPrefix);
                 this.scene.explosions.create(enemy.x, enemy.y);
             } 

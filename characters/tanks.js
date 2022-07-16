@@ -67,14 +67,14 @@ export class Tanks {
         let x = Phaser.Math.RND.between(coordinates.x.min, coordinates.x.max);
         let y = Phaser.Math.RND.between(coordinates.y.min, coordinates.y.max);
         this.create(this.type, x, y, this.type + '_stop');
-        let shotArea = this.relatedScene.physics.add.image(100, 50);
-        shotArea.body.setBoundsRectangle(x, y, 100, 50);
+        let shotArea = this.relatedScene.physics.add.image(200, 200);
+        shotArea.body.setBoundsRectangle(x, y, 200, 200);
         this.shotArea.create(x, y, shotArea);
         this.shotArea.children.entries[i].item = this.items.children.entries[i];
         this.items.children.entries[i].shotArea = this.shotArea.children.entries[i];
-        // this.shotArea.children.entries[i].body.width = 100;
+        // this.shotArea.children.entries[i].body.width = 200;
         this.items.children.entries[i].shotArea.setDepth(-1);
-        this.items.children.entries[i].shotArea.setSize(100, 50);            
+        this.items.children.entries[i].shotArea.setSize(200, 200);            
     }
     return this.shotArea;
   }

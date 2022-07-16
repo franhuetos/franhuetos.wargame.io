@@ -79,7 +79,7 @@ export class Soldiers {
         let x = Phaser.Math.RND.between(coordinates.x.min, coordinates.x.max);
         let y = Phaser.Math.RND.between(coordinates.y.min, coordinates.y.max);
         this.create(this.type, x, y, this.type + '_stop');
-        let shotArea = this.relatedScene.physics.add.image(100, 50);
+        let shotArea = this.relatedScene.physics.add.image(100, 50).setOrigin(0, 0);
         shotArea.body.setBoundsRectangle(x, y, 100, 50);
         this.shotArea.create(x, y, shotArea);
         this.shotArea.children.entries[i].item = this.items.children.entries[i];

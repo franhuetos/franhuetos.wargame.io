@@ -46,7 +46,7 @@ export class Fase1 extends SelectionDemoScene {
     }
 
     preload() {
-        // this.debugMode = !!(this.physics.systems.arcadePhysics.config.debug === true);
+        this.debugMode = this.physics.config.debug;
 
         this.load.audio('shot_audio', ['sounds/shot.mp3']);
         this.load.audio('explosion_audio', ['sounds/Explosion1.mp3']);
@@ -88,16 +88,16 @@ export class Fase1 extends SelectionDemoScene {
         this.towersShotArea = this.towers.createGroup(3, {min: 320, max: 350}, {min:180, max: 280});
        
         this.soldiers = new Soldiers(this, 'soldier');
-        this.soldiersShotArea =  this.soldiers.createGroup(10, {min: 150, max: 280}, {min:50, max: 280});
+        this.soldiersShotArea =  this.soldiers.createGroup(10, {min: 200, max: 280}, {min:150, max: 280});
  
         this.tanks = new Tanks(this, 'tank');
-        this.tanksShotArea =  this.tanks.createGroup(1, {min: 150, max: 280}, {min:50, max: 280});
+        this.tanksShotArea =  this.tanks.createGroup(1, {min: 200, max: 280}, {min:150, max: 280});
         
         this.enemies = new Soldiers(this, 'enemy');
-        this.enemiesShotArea =  this.enemies.createGroup(20, {min: 650, max: 750}, {min:50, max: 250});
+        this.enemiesShotArea =  this.enemies.createGroup(20, {min: 650, max: 750}, {min:150, max: 280});
         
         this.tanksEnemies = new Tanks(this, 'tankenemy');
-        this.tanksEnemiesShotArea =  this.tanksEnemies.createGroup(1, {min: 650, max: 750}, {min:50, max: 250});
+        this.tanksEnemiesShotArea =  this.tanksEnemies.createGroup(1, {min: 650, max: 750}, {min:150, max: 280});
 
 
         backgroundLayer.setCollisionByProperty({ collides: true });
@@ -297,7 +297,7 @@ export class Fase1 extends SelectionDemoScene {
         // let arrivalArea = new Phaser.Geom.Rectangle(newPointer.x, newPointer.y, width, width);
 
         if (this.debugMode) {
-            this.selection = this.childrenScene.add.rectangle(centeredArrivalZone.x, centeredArrivalZone.y, centeredArrivalZone.width, centeredArrivalZone.height, "#1995dc", 0.5);
+            this.selection = this.childrenScene.add.rectangle(centeredArrivalZone.x + centeredArrivalZone.width/2, centeredArrivalZone.y + centeredArrivalZone.height/2, centeredArrivalZone.width, centeredArrivalZone.height, "#1995dc", 0.5);
         }
 
         element.movementManager.arrivalArea = centeredArrivalZone;
