@@ -15,6 +15,8 @@ export class Fase1 extends SelectionDemoScene {
 
         this.debugMode = false;
 
+        this.updateCounter = 0;
+
         //sounds
         this.shotAudio;
 
@@ -43,6 +45,8 @@ export class Fase1 extends SelectionDemoScene {
         this.score = new Score();
         this.finished = false;
 
+        this.enemiesMoves = [];
+
     }
 
     preload() {
@@ -70,6 +74,45 @@ export class Fase1 extends SelectionDemoScene {
         this.finished = false;        
     }
 
+    moveEnemies(enemiesMoves){
+        if(enemiesMoves.length){
+            let movement;
+            if(enemiesMoves.length > 1){
+                movement = enemiesMoves.shift();
+            }else{
+                movement = enemiesMoves[0];
+            }
+            let timer = this.time.delayedCall(movement.time, function(){
+                let enemies = [...this.enemies.items.children.entries, ...this.tanksEnemies.items.children.entries];
+                enemies.forEach((soldier, pos) => {
+
+                    if(movement.positions){
+                        let pos = Phaser.Math.Between(0, movement.positions.length-1);
+                        if(movement.positions[pos].active){
+                            // this.moveSelectedElement(soldier, {x: movement.positions[pos].x, y: movement.positions[pos].y});
+
+                            let arrivalZone = new Phaser.Geom.Rectangle(movement.positions[pos].x, movement.positions[pos].y, soldier.body.width, soldier.body.height);
+                            let centeredArrivalZone = Phaser.Geom.Rectangle.CenterOn(arrivalZone, movement.positions[pos].x, movement.positions[pos].y);
+                            if (this.debugMode) {
+                                this.selection = this.childrenScene.add.rectangle(centeredArrivalZone.x + centeredArrivalZone.width/2, centeredArrivalZone.y + centeredArrivalZone.height/2, centeredArrivalZone.width, centeredArrivalZone.height, "#1995dc", 0.5);
+                            }
+                    
+                            soldier.movementManager.arrivalArea = centeredArrivalZone;
+                            soldier.movementManager.hasArrivedToPointer = false;
+                            soldier.movementManager.walk(movement.positions[pos].x, movement.positions[pos].y);
+                        }
+                        
+                    }else{
+                        this.moveSelectedElement(soldier, movement);
+                    }
+                    
+                });
+                this.moveEnemies(enemiesMoves);
+            }, null, this);
+        }
+        
+    }
+
     create() {
         this.initializeState();
 
@@ -91,13 +134,24 @@ export class Fase1 extends SelectionDemoScene {
         this.soldiersShotArea =  this.soldiers.createGroup(10, {min: 200, max: 280}, {min:150, max: 280});
  
         this.tanks = new Tanks(this, 'tank');
-        this.tanksShotArea =  this.tanks.createGroup(1, {min: 200, max: 280}, {min:150, max: 280});
+        this.tanksShotArea =  this.tanks.createGroup(1, {min: 10, max: 280}, {min:150, max: 280});
         
         this.enemies = new Soldiers(this, 'enemy');
-        this.enemiesShotArea =  this.enemies.createGroup(20, {min: 650, max: 750}, {min:150, max: 280});
+        this.enemiesShotArea =  this.enemies.createGroup(10, {min: 650, max: 750}, {min:210, max: 250});
         
         this.tanksEnemies = new Tanks(this, 'tankenemy');
-        this.tanksEnemiesShotArea =  this.tanksEnemies.createGroup(1, {min: 650, max: 750}, {min:150, max: 280});
+        this.tanksEnemiesShotArea =  this.tanksEnemies.createGroup(1, {min: 650, max: 750}, {min:210, max: 250});
+
+        
+        this.enemiesMoves = [
+            {time: 5000, x: -100, y: -10},
+            {time: 5000, x: -200, y: -10},
+            {time: 5000, x: -300, y: -10},
+            {time: 10000, positions: [...this.soldiers.items.children.entries, ...this.tanks.items.children.entries]}
+        ]
+        this.moveEnemies(this.enemiesMoves);
+
+        
 
 
         backgroundLayer.setCollisionByProperty({ collides: true });
@@ -327,8 +381,17 @@ export class Fase1 extends SelectionDemoScene {
         }
     }
 
+    
+    update(time, delta) {
+        this.updateCounter++;
 
-    update() {
+        // if(this.updateCounter > 100) {
+        //     this.updateCounter = 0;
+        // }else{
+        //     return;
+        // }
+
+        console.log(delta);
         if(this.finished) { return; }
         // if (this.fireButton.isDown) {
         //     this.tank.play('tank_shot');
