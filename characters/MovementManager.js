@@ -96,7 +96,7 @@ export class MovementManager {
         this.sprite.body.gameObject.setAlpha(0.2);
         this.sprite.body.gameObject.clearTint();
         this.sprite.shotArea.destroy(); // destruimos el area de disparo
-        // this.sprite.destroy(); // mantenemos vivo el sprite para que se vea en pantalla
+        this.sprite.destroy(); // mantenemos vivo el sprite para que se vea en pantalla
     }
 
     jump() {

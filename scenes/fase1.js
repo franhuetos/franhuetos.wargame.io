@@ -28,7 +28,7 @@ export class Fase1 extends SelectionDemoScene {
 
         //fase constants
         this.constants = {
-            scale: 1
+            scale: 2
         }
 
         //events
@@ -82,14 +82,16 @@ export class Fase1 extends SelectionDemoScene {
             }else{
                 movement = enemiesMoves[0];
             }
+
+           
             let timer = this.time.delayedCall(movement.time, function(){
                 let enemies = [...this.enemies.items.children.entries, ...this.tanksEnemies.items.children.entries];
                 enemies.forEach((soldier, pos) => {
 
                     if(movement.positions){
+                        movement.positions = movement.positions.filter(move => move.active === true); //elimino soldados muertos
                         let pos = Phaser.Math.Between(0, movement.positions.length-1);
-                        if(movement.positions[pos].active){
-                            // this.moveSelectedElement(soldier, {x: movement.positions[pos].x, y: movement.positions[pos].y});
+                        if(movement.positions[pos] && movement.positions[pos].active){
 
                             let arrivalZone = new Phaser.Geom.Rectangle(movement.positions[pos].x, movement.positions[pos].y, soldier.body.width, soldier.body.height);
                             let centeredArrivalZone = Phaser.Geom.Rectangle.CenterOn(arrivalZone, movement.positions[pos].x, movement.positions[pos].y);
@@ -101,9 +103,20 @@ export class Fase1 extends SelectionDemoScene {
                             soldier.movementManager.hasArrivedToPointer = false;
                             soldier.movementManager.walk(movement.positions[pos].x, movement.positions[pos].y);
                         }
-                        
                     }else{
-                        this.moveSelectedElement(soldier, movement);
+                        let x = soldier.x + movement.x;
+                        let y = soldier.y + movement.y;
+                        let arrivalZone = new Phaser.Geom.Rectangle(x, y, soldier.body.width, soldier.body.height);
+                        // let centeredArrivalZone = Phaser.Geom.Rectangle.CenterOn(arrivalZone, movement.x, movement.y);
+                        if (this.debugMode) {
+                            this.selection = this.childrenScene.add.rectangle(arrivalZone.x + arrivalZone.width/2, arrivalZone.y + arrivalZone.height/2, arrivalZone.width, arrivalZone.height, "#1995dc", 0.5);
+                        }
+                
+                        soldier.movementManager.arrivalArea = arrivalZone;
+                        soldier.movementManager.hasArrivedToPointer = false;
+                        soldier.movementManager.walk(x, y);
+
+                        // this.moveSelectedElement(soldier, movement);
                     }
                     
                 });
@@ -131,7 +144,7 @@ export class Fase1 extends SelectionDemoScene {
         this.towersShotArea = this.towers.createGroup(3, {min: 320, max: 350}, {min:180, max: 280});
        
         this.soldiers = new Soldiers(this, 'soldier');
-        this.soldiersShotArea =  this.soldiers.createGroup(10, {min: 200, max: 280}, {min:150, max: 280});
+        this.soldiersShotArea =  this.soldiers.createGroup(10, {min: 200, max: 280}, {min:11, max: 280});
  
         this.tanks = new Tanks(this, 'tank');
         this.tanksShotArea =  this.tanks.createGroup(1, {min: 10, max: 280}, {min:150, max: 280});
@@ -255,17 +268,17 @@ export class Fase1 extends SelectionDemoScene {
                 this.onSelectedElementPointerUp(soldier, _pointer);
             });
 
-            this.enemies.items.children.each((soldier) => {
-                this.onSelectedElementPointerUp(soldier, _pointer);
-            });
+            // this.enemies.items.children.each((soldier) => {
+            //     this.onSelectedElementPointerUp(soldier, _pointer);
+            // });
 
             this.tanks.items.children.each((soldier) => {
                 this.onSelectedElementPointerUp(soldier, _pointer);
             });
 
-            this.tanksEnemies.items.children.each((soldier) => {
-                this.onSelectedElementPointerUp(soldier, _pointer);
-            });
+            // this.tanksEnemies.items.children.each((soldier) => {
+            //     this.onSelectedElementPointerUp(soldier, _pointer);
+            // });
 
         });
 
@@ -385,11 +398,11 @@ export class Fase1 extends SelectionDemoScene {
     update(time, delta) {
         this.updateCounter++;
 
-        // if(this.updateCounter > 100) {
-        //     this.updateCounter = 0;
-        // }else{
-        //     return;
-        // }
+        if(this.updateCounter > 2) {
+            this.updateCounter = 0;
+        }else{
+            return;
+        }
 
         console.log(delta);
         if(this.finished) { return; }

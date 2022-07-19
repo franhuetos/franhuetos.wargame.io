@@ -107,7 +107,7 @@ export class Soldiers {
     // soldier.setImmovable(true);
     soldier.setScale(this.relatedScene.constants.scale || 1);
     soldier.setCollideWorldBounds(true);
-    soldier.setBounce(0);
+    soldier.setBounce(1);
     soldier.orientation = "left";
     soldier.movementManager.hasArrivedToPointer = true;
     // soldier.body.setSize(8, 1, false);
