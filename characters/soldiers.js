@@ -12,6 +12,7 @@ export class Soldiers {
       STOP: 0
     };
     this.items = this.relatedScene.physics.add.group();
+    this.shotArea =  this.relatedScene.physics.add.group();
     this.createAnims();
   }
 
@@ -63,7 +64,7 @@ export class Soldiers {
   }
 
   createGroup(numItems, x, y){
-    numItems = numItems || 23;
+    numItems = numItems || 0;
     let coordinates = {
       x: {
         min: x && x.min? x.min : 0,
@@ -74,7 +75,7 @@ export class Soldiers {
         max: y && y.max? y.max : 280
       }
     };
-    this.shotArea =  this.relatedScene.physics.add.group();
+    
     for (let i = 0; i < numItems; i++) {
         let x = Phaser.Math.RND.between(coordinates.x.min, coordinates.x.max);
         let y = Phaser.Math.RND.between(coordinates.y.min, coordinates.y.max);
@@ -167,9 +168,7 @@ export class Soldiers {
 
   fight(soldier, enemy) {
     soldier.setVelocity(0, 0);
-    enemy.setVelocity(0, 0);
-    soldier.setBounce(0, 0);
-    soldier.setBounce(0, 0);
+    // soldier.setBounce(0, 0);
     if (soldier.movementManager.state === MovementManager.STATES.MOVING) {
       soldier.movementManager.stop();
     }
@@ -195,7 +194,7 @@ export class Soldiers {
 
   shot(soldier, enemy) {
     soldier.setVelocity(0, 0);
-    soldier.setBounce(0, 0);
+    // soldier.setBounce(0, 0);
     if (soldier.movementManager.state === MovementManager.STATES.MOVING) {
       soldier.movementManager.stop();
     }

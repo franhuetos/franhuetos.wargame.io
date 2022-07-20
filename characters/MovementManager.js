@@ -140,7 +140,10 @@ export class MovementManager {
                 this.scene.shotAudio.play();
                 this.sprite.play(this.actionPrefix + '_shot', true);
                 var wait = Phaser.Math.Between(0, 300);
-                this.scene.time.delayedCall(800 + wait, (soldier)=> { this.isShoting = false; }, this, null); 
+                this.scene.time.delayedCall(800 + wait, (soldier)=> { 
+                    this.isShoting = false;
+                    this.arrivalArea && this.walk(this.arrivalArea.x, this.arrivalArea.y);
+                }, this, null); 
                 this.score.shot(this.actionPrefix);
 
                 var damage = Phaser.Math.Between(0, 10);

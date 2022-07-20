@@ -6,7 +6,6 @@ import { Towers } from './../characters/towers.js';
 
 import { SelectionDemoScene } from './../classes/SelectionDemoScene.js';
 import { Score } from './../classes/Score.js';
-import { DebugPhaser } from '../classes/DebugPhaser.js';
 
 export class Multiplayer extends SelectionDemoScene {
 
@@ -249,7 +248,6 @@ export class Multiplayer extends SelectionDemoScene {
 
         this.createPointerSelector(this);
 
-        let debugInitialize = new DebugPhaser(this.debugMode, this);
 
         this.input.on('pointerup', (pointer) => {
             let _pointer = pointer;

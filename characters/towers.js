@@ -45,7 +45,7 @@ export class Towers {
   }
 
   createGroup(numItems, x, y){
-    numItems = numItems || 23;
+    numItems = numItems || 0;
     let coordinates = {
       x: {
         min: x && x.min? x.min : 0,

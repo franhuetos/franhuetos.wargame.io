@@ -6,7 +6,6 @@ import { Towers } from './../characters/towers.js';
 
 import { SelectionDemoScene } from './../classes/SelectionDemoScene.js';
 import { Score } from './../classes/Score.js';
-import { DebugPhaser } from '../classes/DebugPhaser.js';
 
 export class Fase1 extends SelectionDemoScene {
 
@@ -16,6 +15,8 @@ export class Fase1 extends SelectionDemoScene {
         this.debugMode = false;
 
         this.updateCounter = 0;
+
+        this.cursors;
 
         //sounds
         this.shotAudio;
@@ -55,6 +56,9 @@ export class Fase1 extends SelectionDemoScene {
         this.load.audio('shot_audio', ['sounds/shot.mp3']);
         this.load.audio('explosion_audio', ['sounds/Explosion1.mp3']);
         
+        // this.load.image('backgroundImage', 'test/background.png');
+        // this.load.tilemapTiledJSON('backgroundMap', 'test/big_map.json');
+
         this.load.image('backgroundImage', 'test/pixil-frame-2.png');
         this.load.tilemapTiledJSON('backgroundMap', 'test/new_map.json');
 
@@ -65,7 +69,7 @@ export class Fase1 extends SelectionDemoScene {
         this.load.spritesheet('enemy', 'images/soldier_red8x8.png', { frameWidth: 8, frameHeight: 8, endFrame: 16 });
         this.load.spritesheet('tank', 'images/tank_blue26x12.png', { frameWidth: 26, frameHeight: 12, endFrame: 15 });
         this.load.spritesheet('tankenemy', 'images/tank_red26x12.png', { frameWidth: 26, frameHeight: 12, endFrame: 15 });
-        this.fireButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        // this.fireButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     }
 
@@ -129,6 +133,11 @@ export class Fase1 extends SelectionDemoScene {
     create() {
         this.initializeState();
 
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        // this.cameras.main.setBackgroundColor('#000000');
+        // this.cameras.add(10, 10, 200, 200).setZoom(0.25).setBackgroundColor('#0000aa');
+
         this.shotAudio = this.sound.add('shot_audio');
         this.shotAudio.allowMultiple = true;
         this.explosionAudio = this.sound.add('explosion_audio');
@@ -168,7 +177,12 @@ export class Fase1 extends SelectionDemoScene {
 
 
         backgroundLayer.setCollisionByProperty({ collides: true });
-        this.physics.add.collider(backgroundLayer, [this.soldiers.items, this.enemies.items, this.tanks.items, this.tanksEnemies.items]);
+        this.physics.add.collider(backgroundLayer, [this.soldiers.items, this.enemies.items, this.tanks.items, this.tanksEnemies.items], function(item1, layer){
+            if(item1.movementManager && item1.movementManager.arrivalArea){
+                item1.scene.time.delayedCall(1000, item1.movementManager.walk, [item1.movementManager.arrivalArea.x, item1.movementManager.arrivalArea.y], item1.movementManager);
+            }
+        });
+
  
         // this.physics.add.collider(this.soldiers.items, this.soldiers.items);
         // this.physics.add.collider(this.soldiers.items, [this.enemies.items, this.tanksEnemies.items], this.soldiers.fight, null, this);
@@ -231,7 +245,6 @@ export class Fase1 extends SelectionDemoScene {
 
         this.createPointerSelector(this);
 
-        let debugInitialize = new DebugPhaser(this.debugMode, this);
 
         this.input.on('pointerup', (pointer) => {
             let _pointer = pointer;
@@ -255,7 +268,7 @@ export class Fase1 extends SelectionDemoScene {
                 let centeredNewRec = Phaser.Geom.Rectangle.CenterOn(new Phaser.Geom.Rectangle(this.selectedArea.x, this.selectedArea.y, this.selectedArea.width, this.selectedArea.height), pointer.x + (this.selectedArea.width / 2), pointer.y + (this.selectedArea.height / 2));
                 this.selection = this.childrenScene.add.rectangle(centeredNewRec.x, centeredNewRec.y, centeredNewRec.width, centeredNewRec.height, yellowColor, 0.5);
             
-                const debugGraphics = this.add.graphics().setAlpha(0.7);
+                const debugGraphics = this.add.graphics().setAlpha(0.2);
                 backgroundLayer.renderDebug(debugGraphics, {
                     tileColor: null,
                     collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
@@ -283,23 +296,23 @@ export class Fase1 extends SelectionDemoScene {
         });
 
         this.input.on('pointermove', (pointer) => {
-            // if(pointer.x < 20 && pointer.x > 0 && (pointer.worldX > 0 && pointer.worldX != NaN)){
-            //     // this.cameras.main.pan(pointer.worldX + 1, this.cameras.main.midPoint.y, 2000);
-            //     this.cameras.main.scrollX = this.cameras.main.scrollX - 1;
-            //     // this.cameras.main.centerX(this.cameras.main.sc);
-            // }
-            // if(pointer.x > (this.cameras.main.worldView.width-20) && pointer.worldX < this.cameras.main.worldView.width){
-            //     // this.cameras.main.pan(pointer.worldX + 1, this.cameras.main.midPoint.y, 2000);
-            //     this.cameras.main.scrollX = this.cameras.main.scrollX + 1;
-            // }
-            // if(pointer.y < 20 && pointer.y > 0 && (pointer.worldY > 0 && pointer.worldY != NaN)){
-            //     // this.cameras.main.pan(this.cameras.main.midPoint.x, pointer.worldY + 1, 2000);
-            //     this.cameras.main.scrollY = this.cameras.main.scrollY - 1;
-            // }
-            // if(pointer.y > (this.cameras.main.worldView.height-20) && (pointer.worldY < this.cameras.main.worldView.height && pointer.worldY != NaN)){
-            //     // this.cameras.main.pan(this.cameras.main.midPoint.x, pointer.worldY + 1, 2000);
-            //     this.cameras.main.scrollY = this.cameras.main.scrollY + 1;
-            // }
+        //     if(pointer.x < 20 && pointer.x > 0 && (pointer.worldX > 0 && pointer.worldX != NaN)){
+        //         // this.cameras.main.pan(pointer.worldX + 1, this.cameras.main.midPoint.y, 2000);
+        //         this.cameras.main.scrollX = this.cameras.main.scrollX - 1;
+        //         // this.cameras.main.centerX(this.cameras.main.sc);
+        //     }
+        //     if(pointer.x > (this.cameras.main.worldView.width-20) && pointer.worldX < this.cameras.main.worldView.width){
+        //         // this.cameras.main.pan(pointer.worldX + 1, this.cameras.main.midPoint.y, 2000);
+        //         this.cameras.main.scrollX = this.cameras.main.scrollX + 1;
+        //     }
+        //     if(pointer.y < 20 && pointer.y > 0 && (pointer.worldY > 0 && pointer.worldY != NaN)){
+        //         // this.cameras.main.pan(this.cameras.main.midPoint.x, pointer.worldY + 1, 2000);
+        //         this.cameras.main.scrollY = this.cameras.main.scrollY - 1;
+        //     }
+        //     if(pointer.y > (this.cameras.main.worldView.height-20) && (pointer.worldY < this.cameras.main.worldView.height && pointer.worldY != NaN)){
+        //         // this.cameras.main.pan(this.cameras.main.midPoint.x, pointer.worldY + 1, 2000);
+        //         this.cameras.main.scrollY = this.cameras.main.scrollY + 1;
+        //     }
 
         });
  
@@ -332,11 +345,11 @@ export class Fase1 extends SelectionDemoScene {
         if (selected) {
             this.moveSelectedElement(element, pointer);
         } else {
-            this.stopUnselectedElement(element);
+            this.cleanElementSelection(element);
         }
     }
 
-    stopUnselectedElement(element) {
+    cleanElementSelection(element) {
         element.movementManager.relativePosition = null;
         element.isSelected = false;
         
@@ -396,6 +409,46 @@ export class Fase1 extends SelectionDemoScene {
 
     
     update(time, delta) {
+        // this.cameras.main.startFollow(this.input.mouse.manager.activePointer, true);
+
+        // if(this.input.mouse.manager.activePointer.x < 20 && this.input.mouse.manager.activePointer.x > 0 && (this.input.mouse.manager.activePointer.worldX > 0 && this.input.mouse.manager.activePointer.worldX != NaN)){
+        //     // this.cameras.main.pan(this.input.mouse.manager.activePointer.worldX + 1, this.cameras.main.midPoint.y, 2000);
+        //     this.cameras.main.scrollX = this.cameras.main.scrollX - 10;
+        //     // this.cameras.main.centerX(this.cameras.main.sc);
+        // }
+        // if(this.input.mouse.manager.activePointer.x > (this.cameras.main.worldView.width/2) && this.input.mouse.manager.activePointer.worldX < this.cameras.main.worldView.width){
+        //     // this.cameras.main.pan(this.input.mouse.manager.activePointer.worldX + 1, this.cameras.main.midPoint.y, 2000);
+        //     this.cameras.main.scrollX = this.cameras.main.scrollX + 10;
+        // }
+        // if(this.input.mouse.manager.activePointer.y < 20 && this.input.mouse.manager.activePointer.y > 0 && (this.input.mouse.manager.activePointer.worldY > 0 && this.input.mouse.manager.activePointer.worldY != NaN)){
+        //     // this.cameras.main.pan(this.cameras.main.midPoint.x, this.input.mouse.manager.activePointer.worldY + 1, 2000);
+        //     this.cameras.main.scrollY = this.cameras.main.scrollY - 10;
+        // }
+        // if(this.input.mouse.manager.activePointer.y > (this.cameras.main.worldView.height/2) && (this.input.mouse.manager.activePointer.worldY < this.cameras.main.worldView.height && this.input.mouse.manager.activePointer.worldY != NaN)){
+        //     // this.cameras.main.pan(this.cameras.main.midPoint.x, this.input.mouse.manager.activePointer.worldY + 1, 2000);
+        //     this.cameras.main.scrollY = this.cameras.main.scrollY + 10;
+        // }
+
+        // prueba mover camara
+        // if (this.cursors.up.isDown)
+        // {
+        //     this.cameras.main.y += 4;
+        // }
+        // else if (this.cursors.down.isDown)
+        // {
+        //     this.cameras.main.y -= 4;
+        // }
+
+        // if (this.cursors.left.isDown)
+        // {
+        //     this.cameras.main.x += 4;
+        // }
+        // else if (this.cursors.right.isDown)
+        // {
+        //     this.cameras.main.x -= 4;
+        // }
+        // fin prueba mover camara
+
         this.updateCounter++;
 
         if(this.updateCounter > 2) {
@@ -404,7 +457,7 @@ export class Fase1 extends SelectionDemoScene {
             return;
         }
 
-        console.log(delta);
+        // console.log(delta);
         if(this.finished) { return; }
         // if (this.fireButton.isDown) {
         //     this.tank.play('tank_shot');

@@ -51,7 +51,7 @@ export class Tanks {
   }
 
   createGroup(numItems, x, y){
-    numItems = numItems || 23;
+    numItems = numItems || 0;
     let coordinates = {
       x: {
         min: x && x.min? x.min : 0,
@@ -151,9 +151,7 @@ export class Tanks {
 
   fight(tank, enemy) {
     tank.setVelocity(0, 0);
-    enemy.setVelocity(0, 0);
-    tank.setBounce(0, 0);
-    tank.setBounce(0, 0);
+    // tank.setBounce(0, 0);
     if (tank.movementManager.state === MovementManager.STATES.MOVING) {
       tank.movementManager.stop();
     }
@@ -179,7 +177,7 @@ export class Tanks {
 
   shot(tank, enemy) {
     tank.setVelocity(0, 0);
-    tank.setBounce(0, 0);
+    // tank.setBounce(0, 0);
     if (tank.movementManager.state === MovementManager.STATES.MOVING) {
       tank.movementManager.stop();
     }
