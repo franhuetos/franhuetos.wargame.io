@@ -29,7 +29,7 @@ export class Fase1 extends SelectionDemoScene {
 
         //fase constants
         this.constants = {
-            scale: 2
+            scale: 1
         }
 
         //events
